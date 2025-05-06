@@ -1,0 +1,19 @@
+getrevision:
+  stage: getrevision
+  script:
+    - mkdir output
+    - ls /root/.m2
+    - cat /root/.m2/settings.xml
+    - echo "Hello, $GITLAB_USER_LOGIN!"
+    - |
+      if [ -f "pom.xml" ]; then
+        VERSION=$(xmllint --xpath '/*[local-name()="project"]/*[local-name()="version"]/text()' pom.xml)
+        NAME=$(xmllint --xpath '/*[local-name()="project"]/*[local-name()="artifactId"]/text()' pom.xml)
+      else
+        echo "pom.xml not found!"
+        exit 1
+      fi
+    - echo $VERSION > output/version.txt
+    - echo $NAME > output/name.txt
+  artifacts:
+    paths: [output/]
